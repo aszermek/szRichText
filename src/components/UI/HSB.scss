@@ -1,0 +1,108 @@
+@import "../../vars.scss";
+
+.HSB {
+    &-BasicColor {
+        margin-top: 12px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 0;
+    }
+
+    &-BasicColor button {
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        height: 16px;
+        width: 16px;
+        cursor: pointer;
+        list-style-type: none;
+    }
+
+    &-BasicColor button.active {
+        box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    &-Saturation {
+        width: 100%;
+        position: relative;
+        margin-top: 15px;
+        height: 150px;
+        background-image: linear-gradient(transparent, black),
+            linear-gradient(to right, white, transparent);
+        user-select: none;
+    }
+
+    &-SaturationCursor {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #ffffff;
+        border-radius: 50%;
+        box-shadow: 0 0 15px #0a0b0f26;
+        box-sizing: border-box;
+        transform: translate(-10px, -10px);
+    }
+
+    &-Hue {
+        width: 100%;
+        position: relative;
+        margin-top: 15px;
+        height: 12px;
+        background-image: linear-gradient(
+            to right,
+            rgb(255, 0, 0),
+            rgb(255, 255, 0),
+            rgb(0, 255, 0),
+            rgb(0, 255, 255),
+            rgb(0, 0, 255),
+            rgb(255, 0, 255),
+            rgb(255, 0, 0)
+        );
+        user-select: none;
+        border-radius: 12px;
+    }
+
+    &-HueCursor {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #ffffff;
+        border-radius: 50%;
+        box-shadow: #0003 0 0 0 0.5px;
+        box-sizing: border-box;
+        transform: translate(-10px, -4px);
+    }
+
+    &-Container {
+        display: flex;
+        gap: 5px;
+        flex-direction: column;
+    }
+
+    &-ColorRow {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 5px;
+    }
+
+    &-Color {
+        width: 21px;
+        height: 21px;
+        padding: 0 8px;
+        border-radius: 50%;
+        border: 1px solid $color-gray-5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    &-CenterPopover {
+        background-color: #ffffff;
+        z-index: 5000;
+        border-radius: $rounding-3;
+        padding: $padding-3;
+    }
+}

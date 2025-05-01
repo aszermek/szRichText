@@ -1,0 +1,10 @@
+@import "../../vars.scss";
+
+.Footer {
+    display: flex;
+    flex-direction: column;
+    gap: $padding-4;
+    text-align: right;
+    justify-content: flex-end;
+    width: 100%;
+}

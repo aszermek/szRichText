@@ -1,0 +1,10 @@
+@import "../../vars.scss";
+
+.Logo {
+    font-family: "Sixtyfour", sans-serif;
+    font-variation-settings: "SCAN" -10;
+    font-size: max(2vw, 24px);
+    color: $color-primary-5;
+    margin-top: 12px;
+    text-shadow: 0 8px 48px rgba(221, 255, 119, 0.5);
+}

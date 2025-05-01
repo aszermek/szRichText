@@ -1,0 +1,131 @@
+$padding-multiplier: 1 !default;
+
+$padding-0: 0;
+$padding-0_5: calc(2px * $padding-multiplier);
+$padding-1: calc(4px * $padding-multiplier);
+$padding-1_5: calc(6px * $padding-multiplier);
+$padding-2: calc(8px * $padding-multiplier);
+$padding-2_5: calc(10px * $padding-multiplier);
+$padding-3: calc(12px * $padding-multiplier);
+$padding-3_5: calc(14px * $padding-multiplier);
+$padding-4: calc(16px * $padding-multiplier);
+$padding-4_5: calc(18px * $padding-multiplier);
+$padding-5: calc(20px * $padding-multiplier);
+$padding-5_5: calc(22px * $padding-multiplier);
+$padding-6: calc(24px * $padding-multiplier);
+$padding-6_5: calc(26px * $padding-multiplier);
+$padding-7: calc(28px * $padding-multiplier);
+$padding-8: calc(32px * $padding-multiplier);
+$padding-9: calc(36px * $padding-multiplier);
+$padding-10: calc(40px * $padding-multiplier);
+$padding-11: calc(44px * $padding-multiplier);
+$padding-12: calc(48px * $padding-multiplier);
+$padding-13: calc(52px * $padding-multiplier);
+$padding-14: calc(56px * $padding-multiplier);
+$padding-15: calc(60px * $padding-multiplier);
+$padding-16: calc(64px * $padding-multiplier);
+$padding-17: calc(68px * $padding-multiplier);
+$padding-18: calc(72px * $padding-multiplier);
+$padding-19: calc(76px * $padding-multiplier);
+$padding-20: calc(80px * $padding-multiplier);
+$padding-21: calc(84px * $padding-multiplier);
+$padding-22: calc(88px * $padding-multiplier);
+$padding-23: calc(92px * $padding-multiplier);
+$padding-24: calc(96px * $padding-multiplier);
+
+$rounding-multiplier: 1 !default;
+
+$rounding-half: 50%;
+$rounding-full: 100%;
+$rounding-0: 0;
+$rounding-0_5: calc(2px * $rounding-multiplier);
+$rounding-1: calc(4px * $rounding-multiplier);
+$rounding-1_5: calc(6px * $rounding-multiplier);
+$rounding-2: calc(8px * $rounding-multiplier);
+$rounding-2_5: calc(10px * $rounding-multiplier);
+$rounding-3: calc(12px * $rounding-multiplier);
+$rounding-3_5: calc(14px * $rounding-multiplier);
+$rounding-4: calc(16px * $rounding-multiplier);
+$rounding-4_5: calc(18px * $rounding-multiplier);
+$rounding-5: calc(20px * $rounding-multiplier);
+$rounding-5_5: calc(22px * $rounding-multiplier);
+$rounding-6: calc(24px * $rounding-multiplier);
+$rounding-7: calc(28px * $rounding-multiplier);
+$rounding-8: calc(32px * $rounding-multiplier);
+$rounding-9: calc(36px * $rounding-multiplier);
+$rounding-10: calc(40px * $rounding-multiplier);
+$rounding-11: calc(44px * $rounding-multiplier);
+$rounding-12: calc(48px * $rounding-multiplier);
+$rounding-13: calc(52px * $rounding-multiplier);
+$rounding-14: calc(56px * $rounding-multiplier);
+$rounding-15: calc(60px * $rounding-multiplier);
+$rounding-16: calc(64px * $rounding-multiplier);
+$rounding-17: calc(68px * $rounding-multiplier);
+$rounding-18: calc(72px * $rounding-multiplier);
+$rounding-19: calc(76px * $rounding-multiplier);
+$rounding-20: calc(80px * $rounding-multiplier);
+$rounding-21: calc(84px * $rounding-multiplier);
+$rounding-22: calc(88px * $rounding-multiplier);
+$rounding-23: calc(92px * $rounding-multiplier);
+$rounding-24: calc(96px * $rounding-multiplier);
+
+$shadow-multiplier: 1 !default;
+
+$shadow-box-small: calc(0px * $shadow-multiplier) calc(4px * $shadow-multiplier)
+    calc(8px * $shadow-multiplier) rgba(73, 92, 136, 0.15) !default;
+$shadow-box-medium: calc(0px * $shadow-multiplier)
+    calc(8px * $shadow-multiplier) calc(24px * $shadow-multiplier)
+    rgba(73, 92, 136, 0.15) !default;
+$shadow-box-large: calc(0px * $shadow-multiplier)
+    calc(12px * $shadow-multiplier) calc(32px * $shadow-multiplier)
+    rgba(73, 92, 136, 0.15) !default;
+$shadow-box-default: calc(0px * $shadow-multiplier)
+    calc(16px * $shadow-multiplier) calc(48px * $shadow-multiplier)
+    rgba(73, 92, 136, 0.15) !default;
+
+$color-white: #fafafa !default;
+$color-black: #0a0b0f !default;
+
+$color-gray-1: #333333 !default;
+$color-gray-2: #474747 !default;
+$color-gray-3: #5c5c5c !default;
+$color-gray-4: #707070 !default;
+$color-gray-5: #858585 !default;
+$color-gray-6: #999999 !default;
+$color-gray-7: #adadad !default;
+$color-gray-8: #c2c2c2 !default;
+$color-gray-9: #d6d6d6 !default;
+$color-gray-10: #ebebeb !default;
+
+$color-primary-1: #8ab800 !default;
+$color-primary-2: #99cc00 !default;
+$color-primary-3: #a8e000 !default;
+$color-primary-4: #b8f500 !default;
+$color-primary-5: #ddff77 !default;
+$color-primary-6: #e6ff99 !default;
+$color-primary-7: #ebffad !default;
+$color-primary-8: #f0ffc2 !default;
+$color-primary-9: #f5ffd6 !default;
+$color-primary-10: #faffeb !default;
+
+$color-red-1: #290009 !default;
+$color-red-2: #3d000d !default;
+$color-red-3: #520012 !default;
+$color-red-4: #660016 !default;
+$color-red-5: #7d001b !default;
+$color-red-6: #a30023 !default;
+$color-red-7: #b80028 !default;
+$color-red-8: #cc002c !default;
+$color-red-9: #e00031 !default;
+$color-red-10: #f50035 !default;
+
+$color-blue-1: #0f1e43 !default;
+$color-blue-2: #162e64 !default;
+$color-blue-3: #1d3d86 !default;
+$color-blue-4: #254ca7 !default;
+$color-blue-5: #2b59c3 !default;
+$color-blue-6: #4772d7 !default;
+$color-blue-7: #688cde !default;
+$color-blue-8: #8aa5e5 !default;
+$color-blue-9: #abbfed !default;
+$color-blue-10: #cdd9f4 !default;

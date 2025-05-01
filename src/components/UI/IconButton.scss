@@ -1,0 +1,17 @@
+@import "../../vars.scss";
+
+.IconButton {
+    border-radius: $rounding-full;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+
+    &-Disabled {
+        pointer-events: none;
+    }
+}
