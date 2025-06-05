@@ -6,20 +6,38 @@ import {
 } from "lexical";
 import { $isLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
 import { mergeRegister } from "@lexical/utils";
+import { getSelectedNode } from "../../../../utils/utils";
+import { Input } from "../../../UI/Input";
+import { PencilSimple, FloppyDisk, Trash } from "@phosphor-icons/react";
+import { Icon } from "../../../UI/Icon";
 import {
-    getSelectedNode,
-    positionEditorElement,
-} from "../../../../utils/utils";
+    useFloating,
+    offset,
+    flip,
+    shift,
+    autoUpdate,
+} from "@floating-ui/react";
 
 export function FloatingLinkEditor({ editor }) {
-    const editorRef = useRef(null);
-    const inputRef = useRef(null);
-    const mouseDownRef = useRef(false);
     const [linkUrl, setLinkUrl] = useState("");
     const [isEditMode, setEditMode] = useState(true);
     const [lastSelection, setLastSelection] = useState(null);
+    const [anchorElement, setAnchorElement] = useState<HTMLElement | null>(
+        null
+    );
 
-    const formatUrl = (url) => {
+    const { refs, floatingStyles } = useFloating({
+        open: !!anchorElement,
+        middleware: [offset(8), flip(), shift()],
+        whileElementsMounted: autoUpdate,
+        placement: "bottom-start",
+    });
+
+    useEffect(() => {
+        refs.setReference(anchorElement);
+    }, [anchorElement, refs]);
+
+    const formatUrl = (url: string) => {
         if (!/^https?:\/\//i.test(url)) {
             return `http://${url}`;
         }
@@ -27,68 +45,36 @@ export function FloatingLinkEditor({ editor }) {
     };
 
     const updateLinkEditor = useCallback(() => {
-        const selection = $getSelection();
-        if ($isRangeSelection(selection)) {
-            const node = getSelectedNode(selection);
-            const parent = node.getParent();
-            if ($isLinkNode(parent)) {
-                setLinkUrl(parent.getURL());
-            } else if ($isLinkNode(node)) {
-                setLinkUrl(node.getURL());
+        editor.getEditorState().read(() => {
+            const selection = $getSelection();
+            let anchorDom: HTMLElement | null = null;
+            if ($isRangeSelection(selection)) {
+                const node = getSelectedNode(selection);
+                const parent = node.getParent();
+                if ($isLinkNode(parent)) {
+                    setLinkUrl(parent.getURL());
+                } else if ($isLinkNode(node)) {
+                    setLinkUrl(node.getURL());
+                } else {
+                    setLinkUrl("");
+                }
+                const dom = editor.getElementByKey(node.getKey());
+                anchorDom = dom;
+                setLastSelection(selection);
             } else {
                 setLinkUrl("");
+                setLastSelection(null);
             }
-        }
-        const editorElem = editorRef.current;
-        const nativeSelection = window.getSelection();
-        const activeElement = document.activeElement;
-
-        if (editorElem === null) {
-            return;
-        }
-
-        const rootElement = editor.getRootElement();
-        if (
-            selection !== null &&
-            nativeSelection !== null &&
-            rootElement !== null &&
-            rootElement.contains(nativeSelection.anchorNode) &&
-            editor.isEditable()
-        ) {
-            const domRange = nativeSelection.getRangeAt(0);
-            let rect;
-            if (nativeSelection.anchorNode === rootElement) {
-                let inner = rootElement;
-                while (inner.firstElementChild != null) {
-                    inner = inner.firstElementChild;
-                }
-                rect = inner.getBoundingClientRect();
-            } else {
-                rect = domRange.getBoundingClientRect();
-            }
-
-            if (!mouseDownRef.current) {
-                positionEditorElement(editorElem, rect);
-            }
-            setLastSelection(selection);
-        } else if (!activeElement || activeElement.className !== "link-input") {
-            positionEditorElement(editorElem, null);
-            setLastSelection(null);
-            setEditMode(false);
-            setLinkUrl("");
-        }
-
-        return true;
+            setAnchorElement(anchorDom);
+            setEditMode(true);
+        });
     }, [editor]);
 
     useEffect(() => {
         return mergeRegister(
-            editor.registerUpdateListener(({ editorState }) => {
-                editorState.read(() => {
-                    updateLinkEditor();
-                });
+            editor.registerUpdateListener(() => {
+                updateLinkEditor();
             }),
-
             editor.registerCommand(
                 SELECTION_CHANGE_COMMAND,
                 () => {
@@ -101,31 +87,63 @@ export function FloatingLinkEditor({ editor }) {
     }, [editor, updateLinkEditor]);
 
     useEffect(() => {
-        editor.getEditorState().read(() => {
-            updateLinkEditor();
-        });
+        updateLinkEditor();
     }, [editor, updateLinkEditor]);
 
+    useEffect(() => {
+        const handleMouseDown = (e: MouseEvent) => {
+            if (
+                anchorElement &&
+                refs.floating.current &&
+                refs.floating.current.contains(e.target as Node)
+            ) {
+                e.stopPropagation();
+            }
+        };
+        document.addEventListener("mousedown", handleMouseDown, true);
+        return () => {
+            document.removeEventListener("mousedown", handleMouseDown, true);
+        };
+    }, [anchorElement, refs.floating]);
+
+    // Prevent Lexical from stealing focus from the input on mouse down/up
+    useEffect(() => {
+        const handlePointerDown = (e: PointerEvent) => {
+            if (
+                anchorElement &&
+                refs.floating.current &&
+                refs.floating.current.contains(e.target as Node)
+            ) {
+                // Prevent Lexical's event handlers from running
+                e.stopPropagation();
+            }
+        };
+        document.addEventListener("pointerdown", handlePointerDown, true);
+        return () => {
+            document.removeEventListener(
+                "pointerdown",
+                handlePointerDown,
+                true
+            );
+        };
+    }, [anchorElement, refs.floating]);
+
+    if (!anchorElement) return null;
+
     return (
-        <div ref={editorRef} className="RichText-LinkEditor">
-            {/* <Input
-                isCompact
-                ref={inputRef}
+        <div
+            ref={refs.setFloating}
+            style={{
+                ...floatingStyles,
+                zIndex: 1000,
+                position: "absolute",
+            }}
+            className="RichText-LinkEditor"
+        >
+            <Input
                 inactive={!isEditMode}
-                extraProps={{
-                    input: {
-                        // autoFocus: true,
-                        onClick: (e) => {
-                            e.stopPropagation();
-                        },
-                        onFocus: (e) => {
-                            e.stopPropagation();
-                        },
-                    },
-                }}
-                // className="link-input"
                 value={linkUrl}
-                onChanged={setLinkUrl}
+                onChange={setLinkUrl}
                 onKeyDown={(event) => {
                     if (event.key === "Enter") {
                         event.preventDefault();
@@ -143,53 +161,54 @@ export function FloatingLinkEditor({ editor }) {
                         setEditMode(false);
                     }
                 }}
-                suffix={{
-                    noBorder: true,
-                    value: (
-                        <div className="RichText-LinkEditor-Buttons">
-                            {!isEditMode ? (
-                                <Icon
-                                    color="Primary"
-                                    size={16}
-                                    icon={PencilSimple}
-                                    onClick={() => setEditMode(true)}
-                                />
-                            ) : (
-                                <Icon
-                                    color="Primary"
-                                    size={16}
-                                    icon={
-                                        FloppyDisk
-                                    }
-                                    onClick={() => {
-                                        if (linkUrl !== "") {
-                                            editor.dispatchCommand(
-                                                TOGGLE_LINK_COMMAND,
-                                                {
-                                                    url: formatUrl(linkUrl),
-                                                    target: "_blank",
-                                                }
-                                            );
-                                        }
-                                        setEditMode(false);
-                                    }}
-                                />
-                            )}
+                suffix={
+                    <div className="RichText-LinkEditor-Buttons">
+                        {!isEditMode ? (
                             <Icon
-                                color="Primary"
+                                color="#2b59c3"
                                 size={16}
-                                icon={Trash}
+                                icon={PencilSimple}
+                                onClick={() => setEditMode(true)}
+                            />
+                        ) : (
+                            <Icon
+                                color="#2b59c3"
+                                size={16}
+                                icon={FloppyDisk}
                                 onClick={() => {
-                                    editor.dispatchCommand(
-                                        TOGGLE_LINK_COMMAND,
-                                        null
-                                    );
+                                    if (linkUrl !== "") {
+                                        editor.dispatchCommand(
+                                            TOGGLE_LINK_COMMAND,
+                                            {
+                                                url: formatUrl(linkUrl),
+                                                target: "_blank",
+                                            }
+                                        );
+                                    }
+                                    setEditMode(false);
                                 }}
                             />
-                        </div>
-                    ),
+                        )}
+                        <Icon
+                            color="#cc002c"
+                            size={16}
+                            icon={Trash}
+                            onClick={() => {
+                                editor.dispatchCommand(
+                                    TOGGLE_LINK_COMMAND,
+                                    null
+                                );
+                            }}
+                        />
+                    </div>
+                }
+                onMouseDown={(e) => {
+                    e.stopPropagation();
                 }}
-            /> */}
+                onMouseUp={(e) => {
+                    e.stopPropagation();
+                }}
+            />
         </div>
     );
 }

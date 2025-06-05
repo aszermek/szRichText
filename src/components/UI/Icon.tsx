@@ -14,6 +14,7 @@ export const Icon = ({
     color = "#0a0b0f",
     weight,
     className,
+    ...rest
 }: IIconProps) => {
     if (!icon) {
         console.error("Icon is not defined", { icon });
@@ -29,6 +30,8 @@ export const Icon = ({
             color={color}
             weight={weight}
             className={className}
+            style={rest.onClick && { cursor: "pointer" }}
+            {...rest}
         />
     );
 };

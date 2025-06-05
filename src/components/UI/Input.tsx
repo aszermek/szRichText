@@ -1,7 +1,11 @@
 import React from "react";
 import "./Input.scss";
 
-interface IInputProps {
+interface IInputProps
+    extends Omit<
+        React.InputHTMLAttributes<HTMLInputElement>,
+        "onChange" | "prefix" | "suffix" | "value"
+    > {
     value?: string;
     onChange?: (value: string) => void;
     prefix?: React.ReactNode;
