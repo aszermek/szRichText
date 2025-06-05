@@ -60,9 +60,13 @@
     }
 
     &-Content {
+        cursor: text;
         padding: $padding-2;
 
         &-Scroll {
+            display: flex;
+            height: 100%;
+            width: 100%;
             padding: $padding-1 0;
             overflow: auto;
             resize: vertical;
@@ -76,7 +80,7 @@
         padding-right: 12px;
         padding-left: 12px;
         min-height: 112px;
-        height: 100%;
+        flex: 1;
     }
 
     &-Placeholder {

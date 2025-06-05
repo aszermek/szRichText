@@ -3,12 +3,9 @@
 .szRichText {
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
     gap: $padding-12;
 }
 
 .Footer {
-    font-size: 13px;
-    color: $color-gray-5;
 }

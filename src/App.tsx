@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { RichText } from "./components/RichText/RichText";
-import { Logo } from "./components/Logo/Logo";
 import "./App.scss";
-import { Footer } from "./components/Footer/Footer";
+import { Logo } from "./components/Logo/Logo";
+import { RichText } from "./components/RichText/RichText";
 import { names } from "./config/names";
 
 function App() {
     const [value, setValue] = useState<string>("");
     return (
         <div className="szRichText">
+            <Logo />
             <main>
                 <RichText
                     plugins={{
@@ -25,7 +25,6 @@ function App() {
                     onChange={setValue}
                 />
             </main>
-            <Footer />
         </div>
     );
 }

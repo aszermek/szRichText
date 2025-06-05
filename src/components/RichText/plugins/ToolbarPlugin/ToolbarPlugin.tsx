@@ -1,4 +1,4 @@
-import "../RichText.scss";
+import "../../RichText.scss";
 
 import { $createCodeNode } from "@lexical/code";
 import { $isLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
@@ -53,7 +53,6 @@ import {
     TextItalic,
     TextStrikethrough,
     TextUnderline,
-    Trash,
 } from "@phosphor-icons/react";
 import {
     $createParagraphNode,
@@ -74,9 +73,9 @@ import {
 } from "lexical";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import Colorpicker from "../../UI/Colorpicker";
-import Dropdown, { IDropdownOption } from "../../UI/Dropdown";
-import { IIconButtonProps, IconButton } from "../../UI/IconButton";
+import Colorpicker from "../../../UI/Colorpicker";
+import Dropdown, { IDropdownOption } from "../../../UI/Dropdown";
+import { IIconButtonProps, IconButton } from "../../../UI/IconButton";
 
 export interface IRichTextToolbarPluginParams {}
 

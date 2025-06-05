@@ -42,12 +42,10 @@ export function TreeView({
         const element = treeElementRef.current;
 
         if (element !== null) {
-            // Assigns the editor instance to the tree view DOM element for internal tracking
             // @ts-ignore Internal field used by Lexical
             element.__lexicalEditor = editor;
 
             return () => {
-                // Cleans up the reference when the component is unmounted
                 // @ts-ignore Internal field used by Lexical
                 element.__lexicalEditor = null;
             };

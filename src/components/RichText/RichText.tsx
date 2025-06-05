@@ -15,7 +15,7 @@ import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import classNames from "classnames";
 import { $insertNodes, TextNode } from "lexical";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./RichText.scss";
 import { ExtendedTextNode } from "./plugins/ExtendedTextNodePlugin";
 import HtmlFromNodesPlugin from "./plugins/HtmlFromNodesPlugin";
@@ -25,34 +25,9 @@ import MentionsPlugin, {
 } from "./plugins/MentionsPlugin";
 import ToolbarPlugin, {
     IRichTextToolbarPluginParams,
-} from "./plugins/ToolbarPlugin";
+} from "./plugins/ToolbarPlugin/ToolbarPlugin";
 import { TreeViewPlugin } from "./plugins/TreeViewPlugin";
-
-const theme = {
-    heading: {
-        h1: "RichText-Editor-H1",
-        h2: "RichText-Editor-H2",
-        h3: "RichText-Editor-H3",
-    },
-    list: {
-        nested: {
-            listitem: "RichText-Editor-NestedItem",
-        },
-        ol: "RichText-Editor-Ol",
-        ul: "RichText-Editor-Ul",
-        listitem: "RichText-Editor-Item",
-    },
-    quote: "RichText-Editor-Quote",
-    code: "RichText-Editor-Code",
-    link: "RichText-Editor-Link",
-    text: {
-        bold: "RichText-Editor-TextBold",
-        italic: "RichText-Editor-TextItalic",
-        strikethrough: "RichText-Editor-TextStrikethrough",
-        underline: "RichText-Editor-TextUnderline",
-        underlineStrikethrough: "RichText-Editor-TextUnderlineStrikethrough",
-    },
-};
+import { theme } from "../../config/theme";
 
 function onError(error: Error) {
     console.error(error);
@@ -118,6 +93,8 @@ export const RichText = ({
 }: IRichTextProps): React.ReactNode => {
     const [editorState, setEditorState] = useState<string>(value);
     const [isFocused, setIsFocused] = useState<boolean>(false);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const contentEditableRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         setEditorState(value);
@@ -132,16 +109,50 @@ export const RichText = ({
         }
     }, [editorState, value]);
 
-    const handleFocus = (e?: React.FocusEvent<HTMLDivElement>) => {
-        setIsFocused(true);
+    const handleFocus = () => {
+        if (!isFocused) {
+            setIsFocused(true);
+        }
     };
 
-    const handleBlur = (e?: React.FocusEvent<HTMLDivElement>) => {
-        setIsFocused(false);
+    const handleBlur = () => {
+        if (isFocused) {
+            setIsFocused(false);
+        }
     };
+
+    const handleContainerClick = (e: React.MouseEvent) => {
+        if (readOnly) return;
+
+        if (
+            !isFocused &&
+            contentEditableRef.current &&
+            !contentEditableRef.current.contains(e.target as Node)
+        ) {
+            contentEditableRef.current.focus();
+            handleFocus();
+        }
+    };
+
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (
+                isFocused &&
+                containerRef.current &&
+                !containerRef.current.contains(e.target as Node)
+            ) {
+                handleBlur();
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     const initialConfig = {
-        namespace: "MyEditor",
+        namespace: "szRichText",
         theme,
         onError,
         editable: !readOnly,
@@ -202,7 +213,11 @@ export const RichText = ({
                     </div>
                 ) : (
                     <>
-                        <div className={containerClasses}>
+                        <div
+                            className={containerClasses}
+                            ref={containerRef}
+                            onMouseUp={handleContainerClick}
+                        >
                             <div className="RichText-LabelContainer">
                                 <span className="RichText-Label">{label}</span>
                             </div>
@@ -215,6 +230,7 @@ export const RichText = ({
                                     <RichTextPlugin
                                         contentEditable={
                                             <ContentEditable
+                                                ref={contentEditableRef}
                                                 className="RichText-ContentEditable"
                                                 onFocus={handleFocus}
                                                 onBlur={handleBlur}
