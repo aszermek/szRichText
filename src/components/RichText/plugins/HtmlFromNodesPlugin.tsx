@@ -1,7 +1,7 @@
 import { $generateHtmlFromNodes } from "@lexical/html";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 
-export default function HtmlFromNodesPlugin({
+export function HtmlFromNodesPlugin({
     onChange,
 }: {
     onChange: (state: string) => void;

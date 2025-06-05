@@ -19,7 +19,7 @@ export interface IDropdownProps {
     onChange?: (key: string, option: IDropdownOption) => void;
 }
 
-const Dropdown = ({
+export const Dropdown = ({
     label,
     options,
     initialKey,
@@ -139,5 +139,3 @@ const Dropdown = ({
         </div>
     );
 };
-
-export default Dropdown;

@@ -20,7 +20,7 @@ export const calculateLuminance = (color: string) => {
     return luminance;
 };
 
-export const getSelectedNode = (selection: RangeSelection) => {
+export function getSelectedNode(selection: RangeSelection) {
     const anchor = selection.anchor;
     const focus = selection.focus;
     const anchorNode = selection.anchor.getNode();
@@ -30,8 +30,33 @@ export const getSelectedNode = (selection: RangeSelection) => {
     }
     const isBackward = selection.isBackward();
     if (isBackward) {
+        // @ts-ignore
         return $isAtNodeEnd(focus) ? anchorNode : focusNode;
     } else {
+        // @ts-ignore
         return $isAtNodeEnd(anchor) ? focusNode : anchorNode;
     }
-};
+}
+
+export function sendEditorState(editor: any): string {
+    return JSON.stringify(editor.getEditorState());
+}
+
+export function positionEditorElement(editor: any, rect: any) {
+    if (rect === null) {
+        editor.style.opacity = "0";
+        editor.style.top = "-1000px";
+        editor.style.left = "-1000px";
+    } else {
+        editor.style.opacity = "1";
+        editor.style.top = `${
+            rect.top + rect.height + window.pageYOffset + 10
+        }px`;
+        editor.style.left = `${
+            rect.left +
+            window.pageXOffset -
+            editor.offsetWidth / 2 +
+            rect.width / 2
+        }px`;
+    }
+}

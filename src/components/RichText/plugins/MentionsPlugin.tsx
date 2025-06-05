@@ -348,7 +348,7 @@ function MentionsTypeaheadMenuItem({
     );
 }
 
-export default function MentionsPlugin(
+export function MentionsPlugin(
     params: IRichTextUserMentionPluginParams
 ): React.ReactNode | null {
     const [editor] = useLexicalComposerContext();

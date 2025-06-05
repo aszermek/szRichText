@@ -15,7 +15,7 @@ export interface IColorpickerProps
     onChanged?: (color: string) => void;
 }
 
-const Colorpicker = ({
+export const Colorpicker = ({
     label,
     labelIcon,
     color,
@@ -99,5 +99,3 @@ const Colorpicker = ({
         </div>
     );
 };
-
-export default Colorpicker;
