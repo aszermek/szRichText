@@ -16,18 +16,20 @@ import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import classNames from "classnames";
 import { $insertNodes, TextNode } from "lexical";
 import { useEffect, useRef, useState } from "react";
+import { theme } from "../../config/theme";
 import "./RichText.scss";
 import { ExtendedTextNode } from "./plugins/ExtendedTextNodePlugin";
-import HtmlFromNodesPlugin from "./plugins/HtmlFromNodesPlugin";
-import MentionsPlugin, {
+import { HtmlFromNodesPlugin } from "./plugins/HtmlFromNodesPlugin";
+import {
     IRichTextUserMentionPluginParams,
     MentionNode,
+    MentionsPlugin,
 } from "./plugins/MentionsPlugin";
-import ToolbarPlugin, {
+import {
     IRichTextToolbarPluginParams,
+    ToolbarPlugin,
 } from "./plugins/ToolbarPlugin/ToolbarPlugin";
 import { TreeViewPlugin } from "./plugins/TreeViewPlugin";
-import { theme } from "../../config/theme";
 
 function onError(error: Error) {
     console.error(error);

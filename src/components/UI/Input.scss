@@ -1,0 +1,57 @@
+@import "../../vars.scss";
+
+.Input {
+    &-Container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid $color-gray-8;
+        border-radius: $rounding-2;
+        padding: $padding-1 $padding-3;
+        // overflow: hidden;
+
+        &--inactive {
+            pointer-events: none;
+            background-color: $color-gray-8;
+            color: $color-gray-3;
+        }
+
+        &:focus-within:not(&--inactive) {
+            border-color: $color-blue-5;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+    }
+
+    &-Prefix,
+    &-Suffix {
+    }
+
+    &-FieldWrapper {
+        position: relative;
+        flex: 1;
+    }
+
+    &-Field {
+        width: 100%;
+        border: none;
+        outline: none;
+        appearance: none;
+        font-size: 14px;
+        background: transparent;
+
+        &:focus {
+            box-shadow: none;
+        }
+    }
+
+    &-Label {
+        position: absolute;
+        top: 50%;
+        left: 12px;
+        transform: translateY(-50%);
+        color: #999;
+        pointer-events: none;
+        font-size: 14px;
+    }
+}

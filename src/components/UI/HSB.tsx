@@ -1,13 +1,12 @@
+import { Clipboard } from "@phosphor-icons/react";
 import * as React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import "./HSB.scss";
-import { Clipboard, ClipboardText } from "@phosphor-icons/react";
 import { calculateLuminance } from "../../utils/utils";
+import "./HSB.scss";
 
 export interface HSBProps {
     color: string;
     onChange?: (color: string) => void;
-    PopoverProps?: any;
     pickerIsHidden?: boolean;
     selectableColors?: string[];
     label?: string;
@@ -16,19 +15,19 @@ export interface HSBProps {
 }
 
 const basicColors = [
-    "#ff435a", //red
-    "#ff6600", //orange
-    "#ffcc00", //yellow
-    "#214613", //lightgreen
-    "#52ae30", //green
-    "#ddefd6", //darkgreen
-    "#1b82e3", //blue
-    "#a6adba", //slate
-    "#0a0b0f",
-    "#444444", //lightgray
-    "#ababab", //gray
-    "#eeeeee", //darkgray
-    "#ffffff",
+    "#8ab800", // green-1
+    "#b8f500", // green-4
+    "#ebffad", // green-7
+    "#1d3d86", // blue-3
+    "#2b59c3", // blue-5
+    "#8aa5e5", // blue-8
+    "#7d001b", // red-5
+    "#f50035", // red-10
+    "#0a0b0f", // black
+    "#474747", // gray-2
+    "#858585", // gray-5
+    "#c2c2c2", // gray-8
+    "#fafafa", // white
 ];
 
 const WIDTH = 198;
@@ -38,22 +37,14 @@ export const HSB = React.forwardRef(
     ({
         color,
         onChange,
-        PopoverProps,
         pickerIsHidden,
         selectableColors,
-        label,
-        disabled,
-        isCompact = true,
     }: Readonly<HSBProps>) => {
         const [selfColor, setSelfColor] = useState(
             transformColor("hex", color)
         );
         const [inputColor, setInputColor] = useState(color);
-        const [showPicker, setShowPicker] = useState(false);
-        const [iconType, setIconType] = useState("White");
-        const [copyIcon, setCopyIcon] = useState(() => Clipboard);
         const innerDivRef = useRef(null);
-        const popoverRef = useRef(null);
 
         const saturationPosition = useMemo(
             () => ({
@@ -70,14 +61,14 @@ export const HSB = React.forwardRef(
             [selfColor.hsv]
         );
 
-        const onSetHex = (hex: string) => {
-            setInputColor(hex);
+        // const onSetHex = (hex: string) => {
+        //     setInputColor(hex);
 
-            if (/^#[0-9A-Fa-f]{6}$/i.test(hex)) {
-                const newColor = transformColor("hex", hex);
-                setSelfColor(newColor);
-            }
-        };
+        //     if (/^#[0-9A-Fa-f]{6}$/i.test(hex)) {
+        //         const newColor = transformColor("hex", hex);
+        //         setSelfColor(newColor);
+        //     }
+        // };
 
         const onMoveSaturation = ({ x, y }: Position) => {
             const newHsv = {
@@ -99,7 +90,6 @@ export const HSB = React.forwardRef(
         };
 
         useEffect(() => {
-            // Check if the dropdown is actually active
             if (innerDivRef.current !== null && onChange) {
                 onChange(selfColor.hex);
                 setInputColor(selfColor.hex);
@@ -112,21 +102,6 @@ export const HSB = React.forwardRef(
             setSelfColor(newColor);
             setInputColor(newColor.hex);
         }, [color]);
-
-        const showPickerContent = (
-            e: React.MouseEvent<HTMLDivElement, MouseEvent>
-        ) => {
-            e.preventDefault();
-            !disabled && setShowPicker(true);
-        };
-
-        const onClickCopy = async () => {
-            await navigator?.clipboard?.writeText(selfColor.hex);
-            setCopyIcon(() => ClipboardText);
-            setTimeout(() => {
-                setCopyIcon(() => Clipboard);
-            }, 1500);
-        };
 
         const getColorButtons = () => {
             const colors = selectableColors || basicColors;
@@ -145,109 +120,47 @@ export const HSB = React.forwardRef(
             ));
         };
 
-        useEffect(() => {
-            // Calculate the luminance of the background color
-            const luminance = calculateLuminance(selfColor.hex);
-
-            // Determine the appropriate icon type based on the luminance
-            const newIconType = luminance < 0.5 ? "White" : "Black";
-            setIconType(newIconType);
-        }, [selfColor]);
-
         return (
             <div className="HSB" ref={innerDivRef}>
                 <div className="HSB-Container">
                     <div className="HSB-ColorRow">
-                        {/* <Input
-                            inactive={disabled}
-                            prefix={{
-                                value: (
-                                    <Popover
-                                        ref={popoverRef}
-                                        oriantation="right"
-                                        popoverVerticalOffset={8}
-                                        popoverHorizontalOffset={-10}
-                                        arrowHorizontalOffset={10}
-                                        content={
-                                            !disabled ? (
-                                                <div className="HSB-CenterPopover">
-                                                    <div
-                                                        style={{ width: WIDTH }}
-                                                    >
-                                                        <div className="HSB-BasicColor">
-                                                            {getColorButtons()}
-                                                        </div>
-                                                        {pickerIsHidden ? (
-                                                            <></>
-                                                        ) : (
-                                                            <>
-                                                                <MoveWrapper
-                                                                    className="HSB-Saturation"
-                                                                    style={{
-                                                                        backgroundColor: `hsl(${selfColor.hsv.h}, 100%, 50%)`,
-                                                                    }}
-                                                                    onChange={
-                                                                        onMoveSaturation
-                                                                    }
-                                                                >
-                                                                    <div
-                                                                        className="HSB-SaturationCursor"
-                                                                        style={{
-                                                                            backgroundColor:
-                                                                                selfColor.hex,
-                                                                            left: saturationPosition.x,
-                                                                            top: saturationPosition.y,
-                                                                        }}
-                                                                    />
-                                                                </MoveWrapper>
-                                                                <MoveWrapper
-                                                                    className="HSB-Hue"
-                                                                    onChange={
-                                                                        onMoveHue
-                                                                    }
-                                                                >
-                                                                    <div
-                                                                        className="HSB-HueCursor"
-                                                                        style={{
-                                                                            backgroundColor: `hsl(${selfColor.hsv.h}, 100%, 50%)`,
-                                                                            left: huePosition.x,
-                                                                        }}
-                                                                    />
-                                                                </MoveWrapper>
-                                                            </>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            ) : (
-                                                <></>
-                                            )
-                                        }
-                                        {...PopoverProps}
+                        <div style={{ width: WIDTH }}>
+                            <div className="HSB-BasicColor">
+                                {getColorButtons()}
+                            </div>
+                            {pickerIsHidden ? null : (
+                                <div>
+                                    <MoveWrapper
+                                        className="HSB-Saturation"
+                                        style={{
+                                            backgroundColor: `hsl(${selfColor.hsv.h}, 100%, 50%)`,
+                                        }}
+                                        onChange={onMoveSaturation}
                                     >
                                         <div
-                                            className="HSB-Color"
+                                            className="HSB-SaturationCursor"
                                             style={{
                                                 backgroundColor: selfColor.hex,
+                                                left: saturationPosition.x,
+                                                top: saturationPosition.y,
                                             }}
-                                            onClick={(e) => {
-                                                showPickerContent(e);
+                                        />
+                                    </MoveWrapper>
+                                    <MoveWrapper
+                                        className="HSB-Hue"
+                                        onChange={onMoveHue}
+                                    >
+                                        <div
+                                            className="HSB-HueCursor"
+                                            style={{
+                                                backgroundColor: `hsl(${selfColor.hsv.h}, 100%, 50%)`,
+                                                left: huePosition.x,
                                             }}
-                                        ></div>
-                                    </Popover>
-                                ),
-                            }}
-                            isCompact={isCompact}
-                            wide
-                            label={label !== undefined ? label : "Hex"}
-                            onChanged={onSetHex}
-                            value={inputColor}
-                            suffix={{
-                                icon: {
-                                    icon: copyIcon,
-                                    onClick: onClickCopy,
-                                },
-                            }}
-                        /> */}
+                                        />
+                                    </MoveWrapper>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

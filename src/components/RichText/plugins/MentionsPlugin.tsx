@@ -19,7 +19,13 @@ import {
     type SerializedTextNode,
 } from "lexical";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import * as ReactDOM from "react-dom";
+import {
+    useFloating,
+    offset,
+    flip,
+    shift,
+    autoUpdate,
+} from "@floating-ui/react";
 import "../RichText.scss";
 
 export interface IRichTextUserMentionPluginParams {
@@ -464,6 +470,21 @@ export function MentionsPlugin(
         [checkForSlashTriggerMatch, editor]
     );
 
+    const [open, setOpen] = useState(false);
+    const { refs, floatingStyles, update } = useFloating({
+        open,
+        onOpenChange: setOpen,
+        middleware: [offset(), flip(), shift()],
+        whileElementsMounted: autoUpdate,
+        placement: "bottom-start",
+    });
+
+    useEffect(() => {
+        if (open && update) {
+            update();
+        }
+    }, [open, update, options, results, queryString]);
+
     return (
         <LexicalTypeaheadMenuPlugin<MentionTypeaheadOption>
             onQueryChange={setQueryString}
@@ -473,32 +494,46 @@ export function MentionsPlugin(
             menuRenderFn={(
                 anchorElementRef,
                 { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex }
-            ) =>
-                anchorElementRef.current && results.length
-                    ? ReactDOM.createPortal(
-                          <div className="RichText-MentionPopover">
-                              <div className="RichText-MentionPopover-Scroll">
-                                  {options.map((option, i: number) => (
-                                      <MentionsTypeaheadMenuItem
-                                          index={i}
-                                          isSelected={selectedIndex === i}
-                                          onClick={() => {
-                                              setHighlightedIndex(i);
-                                              selectOptionAndCleanUp(option);
-                                          }}
-                                          onMouseEnter={() => {
-                                              setHighlightedIndex(i);
-                                          }}
-                                          key={option.key}
-                                          option={option}
-                                      />
-                                  ))}
-                              </div>
-                          </div>,
-                          anchorElementRef.current
-                      )
-                    : null
-            }
+            ) => {
+                useEffect(() => {
+                    if (
+                        anchorElementRef &&
+                        typeof anchorElementRef !== "function"
+                    ) {
+                        refs.setReference(anchorElementRef.current);
+                    }
+                }, [anchorElementRef]);
+
+                useEffect(() => {
+                    setOpen(Boolean(results.length));
+                }, [results.length]);
+
+                return results.length ? (
+                    <div
+                        ref={refs.setFloating}
+                        style={floatingStyles}
+                        className="RichText-MentionPopover"
+                    >
+                        <div className="RichText-MentionPopover-Scroll">
+                            {options.map((option, i: number) => (
+                                <MentionsTypeaheadMenuItem
+                                    index={i}
+                                    isSelected={selectedIndex === i}
+                                    onClick={() => {
+                                        setHighlightedIndex(i);
+                                        selectOptionAndCleanUp(option);
+                                    }}
+                                    onMouseEnter={() => {
+                                        setHighlightedIndex(i);
+                                    }}
+                                    key={option.key}
+                                    option={option}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                ) : null;
+            }}
         />
     );
 }

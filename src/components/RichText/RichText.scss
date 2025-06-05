@@ -133,8 +133,6 @@
         }
     }
 
-    //////////////////
-
     &-LinkEditor {
         position: absolute;
         margin-top: -8px;
@@ -170,8 +168,6 @@
         background-clip: padding-box;
     }
 
-    //////////////////
-
     &-TreeView {
         margin-top: $padding-6;
         min-height: 400px;
@@ -179,7 +175,7 @@
         overflow: auto;
         color: $color-white;
         font-family: "JetBrains Mono", monospace;
-        font-size: 14px;
+        font-size: 13px;
 
         pre {
             margin: 0;
@@ -227,8 +223,6 @@
             background-clip: padding-box;
         }
     }
-
-    //////////////////
 
     &-MentionPopover {
         width: 250px;

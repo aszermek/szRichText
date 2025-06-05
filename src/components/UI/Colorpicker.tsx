@@ -89,11 +89,7 @@ export const Colorpicker = ({
             </button>
             {isOpen && (
                 <div ref={dropdownRef} className="Colorpicker-Container">
-                    <HSB
-                        color={selectedColor}
-                        onChange={handleChange}
-                        PopoverProps={{ zIndex: 10000 }}
-                    />
+                    <HSB color={selectedColor} onChange={handleChange} />
                 </div>
             )}
         </div>
