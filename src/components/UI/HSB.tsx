@@ -1,7 +1,5 @@
-import { Clipboard } from "@phosphor-icons/react";
 import * as React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { calculateLuminance } from "../../utils/utils";
 import "./HSB.scss";
 
 export interface HSBProps {
@@ -43,7 +41,7 @@ export const HSB = React.forwardRef(
         const [selfColor, setSelfColor] = useState(
             transformColor("hex", color)
         );
-        const [inputColor, setInputColor] = useState(color);
+        const [_, setInputColor] = useState(color);
         const innerDivRef = useRef(null);
 
         const saturationPosition = useMemo(
@@ -284,7 +282,7 @@ export function hex2rgb(hex: string): RGB {
         hex
             .replace(
                 /^#?([a-f\d])([a-f\d])([a-f\d])$/i,
-                (m, r, g, b) => "#" + r + r + g + g + b + b
+                (_, r, g, b) => "#" + r + r + g + g + b + b
             )
             .substring(1)
             .match(/.{2}/g) || []

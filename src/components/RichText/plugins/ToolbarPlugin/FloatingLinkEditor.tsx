@@ -1,22 +1,22 @@
-import { useRef, useState, useCallback, useEffect } from "react";
+import {
+    autoUpdate,
+    flip,
+    offset,
+    shift,
+    useFloating,
+} from "@floating-ui/react";
+import { $isLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
+import { mergeRegister } from "@lexical/utils";
+import { FloppyDisk, PencilSimple, Trash } from "@phosphor-icons/react";
 import {
     $getSelection,
     $isRangeSelection,
     SELECTION_CHANGE_COMMAND,
 } from "lexical";
-import { $isLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
-import { mergeRegister } from "@lexical/utils";
+import { useCallback, useEffect, useState } from "react";
 import { getSelectedNode } from "../../../../utils/utils";
-import { Input } from "../../../UI/Input";
-import { PencilSimple, FloppyDisk, Trash } from "@phosphor-icons/react";
 import { Icon } from "../../../UI/Icon";
-import {
-    useFloating,
-    offset,
-    flip,
-    shift,
-    autoUpdate,
-} from "@floating-ui/react";
+import { Input } from "../../../UI/Input";
 
 export function FloatingLinkEditor({ editor }) {
     const [linkUrl, setLinkUrl] = useState("");

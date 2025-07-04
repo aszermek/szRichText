@@ -171,7 +171,7 @@ export function ToolbarPlugin({
             }),
             editor.registerCommand(
                 SELECTION_CHANGE_COMMAND,
-                (_payload, newEditor) => {
+                (_payload) => {
                     updateToolbar();
                     return false;
                 },
@@ -241,7 +241,7 @@ export function ToolbarPlugin({
     };
 
     const onFontSizeSelect = useCallback(
-        (key: string, option: IDropdownOption) => {
+        (_: string, option: IDropdownOption) => {
             editor.update(() => {
                 const selection = $getSelection();
                 if ($isRangeSelection(selection)) {
